@@ -152,7 +152,7 @@ def main():
             elif 'config' in txtl and event.message.from_id == my_id:
                 api.messages.send(forward=forw(prid, cmid), random_id=0, message='угу', peer_id=prid)
                 conf = config(conf, my_id, prid)
-                api.messages.send(random_id=0, message='я вышел из конфига и не сказал &#9996;&#128526; такой вот я мудак', peer_id=prid)  #я знаю, почему он так делает, но исправлять мне лень. Для этого надо думать а я больше не хочу над ним думать)
+                api.messages.send(random_id=0, message='я вышел из конфига и не сказал &#9996;&#128526; такой вот я мудак', peer_id=prid)  #Я знаю, почему он так делает, но исправлять мне лень. Для этого надо думать, а я больше не хочу над ним думать)
 
             elif 'Статистика проведённых игр в беседе' in txt and conf['stat'] == True:
                 text = (event.message['text']).split('\n')
