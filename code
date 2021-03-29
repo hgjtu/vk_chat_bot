@@ -1,0 +1,214 @@
+import vk_api
+from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
+import sys
+import json
+import requests
+
+token = open('token.txt')
+
+ses = vk_api.VkApi(token= token.read())  
+
+ses._auth_token()
+api = ses.get_api()
+longpoll = VkBotLongPoll(ses, 203371605)
+
+token.close()
+
+
+def forw(prid, cmid):
+    return json.dumps({'peer_id': prid, 'conversation_message_ids': cmid, 'is_reply': 1})
+
+def config(conf, my_id, prid):
+    while True:
+        for event in longpoll.listen():
+            if event.type == VkBotEventType.MESSAGE_NEW:
+                print(event.message)
+
+                txtl = event.message['text'].lower()
+                cmid = event.message['conversation_message_id']
+
+                if 'bue+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['bustle'] = True
+
+                elif 'bue-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['bustle'] = False
+
+                elif 'mar+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['mar'] = True
+
+                elif 'mar-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['mar'] = False
+
+                elif 'myd+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['kill'] = True
+
+                elif 'myd-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['kill'] = False
+
+                elif 'msh+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['msh'] = True
+
+                elif 'msh-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['msh'] = False
+
+                elif 'any+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['angry'] = True
+
+                elif 'any-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['angry'] = False
+
+                elif 'gl+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['get_lost'] = True
+
+                elif 'gl-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['get_lost'] = False
+
+                elif 'team+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['team'] = True
+
+                elif 'team-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['team'] = False
+
+                elif 'stat+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['stat'] = True
+
+                elif 'stat-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['stat'] = False
+
+                elif 'win+' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['win'] = True
+
+                elif 'win-' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='принято', peer_id=prid)
+                    conf['win'] = False
+
+                elif 'endconf' in txtl and event.message.from_id == my_id:
+                    api.messages.send(forward=forw(prid, cmid), random_id=0, message='угу', peer_id=prid)
+                    break
+                break
+            break
+        break
+
+    tru = open('True.txt', 'w')
+    fal = open('False.txt', 'w')
+    for i in conf:
+        if conf[i] == True:
+            tru.write(i + '\n')
+        else:
+            fal.write(i + '\n')
+    tru.close()
+    fal.close()
+    return conf
+
+
+
+def main():
+    conf = {}
+    file = open('True.txt')
+    fs = file.read().split('\n')
+    file.close()
+    for i in fs:
+        conf[i] = True
+
+    file = open('False.txt')
+    fs = file.read().split('\n')
+    file.close()
+    for i in fs:
+        conf[i] = False
+
+    for event in longpoll.listen():
+        if event.type == VkBotEventType.MESSAGE_NEW:
+            print(event.message)
+
+            txtl = event.message['text'].lower()
+            txt = event.message['text']
+
+            prid = event.message['peer_id']
+
+            cmid = event.message['conversation_message_id']
+
+
+            if 'сует' in txtl and conf['bustle'] == True:
+                api.messages.send(random_id=0, message='Суету навести охота &#9996;&#128526;', peer_id=prid, attachment = 'photo-203371605_457239017')
+
+
+            elif 'config' in txtl and event.message.from_id == my_id:
+                api.messages.send(forward=forw(prid, cmid), random_id=0, message='угу', peer_id=prid)
+                conf = config(conf, my_id, prid)
+                api.messages.send(random_id=0, message='я вышел из конфига и не сказал &#9996;&#128526; такой вот я мудак', peer_id=prid)
+
+            elif 'Статистика проведённых игр в беседе' in txt and conf['stat'] == True:
+                text = (event.message['text']).split('\n')
+                del text[:3]
+                for i in range(len(text)):
+                    if 'П.Крупович' in text[i]:
+                        if i == 0:
+                            mesp = 'Ну.. Петя на 1 месте временно. Все же это понимают?)'
+                        else:
+                            mesp = 'Теперь Петя на ' + str(i + 1) + ' месте)'
+                        api.messages.send(random_id=0, message=mesp, peer_id=prid)
+
+            elif 'мару' in txtl and event.message.from_id != my_id and conf['mar'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0, message='Марина != Маруся', peer_id=prid)
+
+            elif 'Мафия убила' in txt and 'М.Калинина' in txt and conf['kill'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0, message='Эхх, ну вот и зачем?', peer_id=prid)
+
+            elif 'морген' in txtl and event.message.from_id == peter_id and conf['msh'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0, message='Да, да', peer_id=prid)
+
+            elif 'злой' in txtl and 'зол' in txtl and 'не' not in txtl and 'бот вики' not in txtl and event.message.from_id == peter_id and conf['angry'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0, message='Зай, ну не злись)', peer_id=prid)
+
+            elif ('!+' in txt or 'Принять участие' in txt) and event.message.from_id == peter_id and conf['get_lost'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0, message='Потеряйся(пожалуйста)', peer_id=prid)
+
+
+            elif 'участники собраны' in txtl and conf['team'] == True:
+                api.messages.send(random_id=0, message='Тимы, кстати, 0)', peer_id=prid)
+
+
+
+            elif ('Победил город, поздравляем!' in txt or 'Победила мафия, поздравляем!' in txt) and 'безысходность' in txt and 'М.Калинина' in txt and conf['win'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0,
+                                  message='Чья же еще может быть победа, как не [id252158710|этого прекрасного человечка]? (не украла, а позаимствовала)',
+                                  peer_id=prid)
+                api.messages.send(forward=forw(prid, cmid), random_id=0,
+                                  message='ого, её не убили в начале.... [id292635910|лучшая] (не украла, а позаимствовала)',
+                                  peer_id=prid)
+
+            elif ('Победил город, поздравляем!' in txt or 'Победила мафия, поздравляем!' in txt) and 'М.Калинина' in txt and conf['win'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0,
+                                  message='Чья же еще может быть победа, как не [id252158710|этого прекрасного человечка]? (не украла, а позаимствовала)',
+                                  peer_id=prid)
+
+            elif ('Победил город, поздравляем!' in txt or 'Победила мафия, поздравляем!' in txt) and 'безысходность' in txt and conf['win'] == True:
+                api.messages.send(forward=forw(prid, cmid), random_id=0,
+                                  message='ого, её не убили в начале.... [id292635910|лучшая] (не украла, а позаимствовала)',
+                                  peer_id=prid)
+
+
+
+while True:
+    try:
+        main()
+    except:
+        pass
+
